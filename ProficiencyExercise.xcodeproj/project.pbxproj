@@ -8,14 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		B92C7DFF24C48E480048A754 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92C7DFE24C48E480048A754 /* AppDelegate.swift */; };
-		B92C7E0124C48E480048A754 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92C7E0024C48E480048A754 /* SceneDelegate.swift */; };
-		B92C7E0324C48E480048A754 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92C7E0224C48E480048A754 /* ViewController.swift */; };
-		B92C7E0624C48E480048A754 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B92C7E0424C48E480048A754 /* Main.storyboard */; };
 		B92C7E0924C48E480048A754 /* ProficiencyExercise.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B92C7E0724C48E480048A754 /* ProficiencyExercise.xcdatamodeld */; };
 		B92C7E0B24C48E490048A754 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B92C7E0A24C48E490048A754 /* Assets.xcassets */; };
 		B92C7E0E24C48E490048A754 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B92C7E0C24C48E490048A754 /* LaunchScreen.storyboard */; };
 		B92C7E1924C48E490048A754 /* ProficiencyExerciseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92C7E1824C48E490048A754 /* ProficiencyExerciseTests.swift */; };
 		B92C7E2424C48E490048A754 /* ProficiencyExerciseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92C7E2324C48E490048A754 /* ProficiencyExerciseUITests.swift */; };
+		B92C7E3224C48EFA0048A754 /* FeedsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92C7E3124C48EFA0048A754 /* FeedsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,9 +36,6 @@
 /* Begin PBXFileReference section */
 		B92C7DFB24C48E480048A754 /* ProficiencyExercise.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProficiencyExercise.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B92C7DFE24C48E480048A754 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B92C7E0024C48E480048A754 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		B92C7E0224C48E480048A754 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		B92C7E0524C48E480048A754 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B92C7E0824C48E480048A754 /* ProficiencyExercise.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ProficiencyExercise.xcdatamodel; sourceTree = "<group>"; };
 		B92C7E0A24C48E490048A754 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B92C7E0D24C48E490048A754 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -51,6 +46,7 @@
 		B92C7E1F24C48E490048A754 /* ProficiencyExerciseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProficiencyExerciseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B92C7E2324C48E490048A754 /* ProficiencyExerciseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProficiencyExerciseUITests.swift; sourceTree = "<group>"; };
 		B92C7E2524C48E490048A754 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B92C7E3124C48EFA0048A754 /* FeedsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,9 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				B92C7DFE24C48E480048A754 /* AppDelegate.swift */,
-				B92C7E0024C48E480048A754 /* SceneDelegate.swift */,
-				B92C7E0224C48E480048A754 /* ViewController.swift */,
-				B92C7E0424C48E480048A754 /* Main.storyboard */,
+				B92C7E3124C48EFA0048A754 /* FeedsViewController.swift */,
 				B92C7E0A24C48E490048A754 /* Assets.xcassets */,
 				B92C7E0C24C48E490048A754 /* LaunchScreen.storyboard */,
 				B92C7E0F24C48E490048A754 /* Info.plist */,
@@ -237,7 +231,6 @@
 			files = (
 				B92C7E0E24C48E490048A754 /* LaunchScreen.storyboard in Resources */,
 				B92C7E0B24C48E490048A754 /* Assets.xcassets in Resources */,
-				B92C7E0624C48E480048A754 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,10 +255,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B92C7E0324C48E480048A754 /* ViewController.swift in Sources */,
 				B92C7DFF24C48E480048A754 /* AppDelegate.swift in Sources */,
 				B92C7E0924C48E480048A754 /* ProficiencyExercise.xcdatamodeld in Sources */,
-				B92C7E0124C48E480048A754 /* SceneDelegate.swift in Sources */,
+				B92C7E3224C48EFA0048A754 /* FeedsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,14 +293,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B92C7E0424C48E480048A754 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B92C7E0524C48E480048A754 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		B92C7E0C24C48E490048A754 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -440,6 +424,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ProficiencyExercise/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -457,6 +442,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ProficiencyExercise/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
