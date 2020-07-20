@@ -36,6 +36,7 @@
 		B9655B4F24C5CA3A00CF147B /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9655B4E24C5CA3A00CF147B /* Reachability.swift */; };
 		B9655B5224C5CA8B00CF147B /* CodingUserInfoKey+Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9655B5124C5CA8B00CF147B /* CodingUserInfoKey+Context.swift */; };
 		B9655B5424C5CAA600CF147B /* String+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9655B5324C5CAA600CF147B /* String+Util.swift */; };
+		B9655B5624C5EB0500CF147B /* UIViewController+Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9655B5524C5EB0500CF147B /* UIViewController+Toast.swift */; };
 		C437F213005F4CBE6411A135 /* Pods_ProficiencyExercise.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E7E7B582ACB9C35CCFCA14 /* Pods_ProficiencyExercise.framework */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +97,7 @@
 		B9655B4E24C5CA3A00CF147B /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		B9655B5124C5CA8B00CF147B /* CodingUserInfoKey+Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CodingUserInfoKey+Context.swift"; sourceTree = "<group>"; };
 		B9655B5324C5CAA600CF147B /* String+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Util.swift"; sourceTree = "<group>"; };
+		B9655B5524C5EB0500CF147B /* UIViewController+Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Toast.swift"; sourceTree = "<group>"; };
 		BCA842DF8AA849D883C7187C /* Pods-ProficiencyExercise-ProficiencyExerciseUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProficiencyExercise-ProficiencyExerciseUITests.debug.xcconfig"; path = "Target Support Files/Pods-ProficiencyExercise-ProficiencyExerciseUITests/Pods-ProficiencyExercise-ProficiencyExerciseUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D457AD98147986DE926D1DCE /* Pods-ProficiencyExercise.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProficiencyExercise.debug.xcconfig"; path = "Target Support Files/Pods-ProficiencyExercise/Pods-ProficiencyExercise.debug.xcconfig"; sourceTree = "<group>"; };
 		F0957D00EFDC8BA61C0DAB32 /* Pods-ProficiencyExerciseTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProficiencyExerciseTests.release.xcconfig"; path = "Target Support Files/Pods-ProficiencyExerciseTests/Pods-ProficiencyExerciseTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 			children = (
 				B9655B5124C5CA8B00CF147B /* CodingUserInfoKey+Context.swift */,
 				B9655B5324C5CAA600CF147B /* String+Util.swift */,
+				B9655B5524C5EB0500CF147B /* UIViewController+Toast.swift */,
 			);
 			path = Extenstion;
 			sourceTree = "<group>";
@@ -575,6 +578,7 @@
 				B92C7E5424C4B35D0048A754 /* DataController.swift in Sources */,
 				B92C7E4024C4B0E50048A754 /* ApiResponse.swift in Sources */,
 				B92C7E4B24C4B1B20048A754 /* InfoTableViewCell.swift in Sources */,
+				B9655B5624C5EB0500CF147B /* UIViewController+Toast.swift in Sources */,
 				B9655B4924C5C99000CF147B /* StoredImagesModel.swift in Sources */,
 				B92C7E3A24C4B0850048A754 /* HTTPMethod.swift in Sources */,
 				B9655B4D24C5CA1E00CF147B /* ActivityIndicatorPresenter.swift in Sources */,

@@ -40,7 +40,7 @@ class ImageDownloader: NSObject {
                             found = true
                             self.cacheImage(image, forURL: url.absoluteString)
                             let dataController = DataController()
-                            if dataController.saveImageIntoStorage(image: image, urlString: urlString) {print("Image Stored in DB \(urlString)")}
+                            if dataController.saveImageIntoStorage(image: image, urlString: urlString) {print("Image Stored in DB")}
                             DispatchQueue.main.async(execute: { completion?(true, image) })
                         }
                     }

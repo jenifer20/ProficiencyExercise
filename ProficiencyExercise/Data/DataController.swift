@@ -16,6 +16,7 @@ class DataController {
     // CoreData Entity Names
     private static let entityName = "Feeds"
     private static let imageStoringEntity = "StoreImages"
+    var storedImages: [StoredImagesModel?]? = []
 
     private let persistentContainer: NSPersistentContainer
     
@@ -81,21 +82,31 @@ extension DataController {
     //MARK:- Save Downloaded Image into CoreData
     func saveImageIntoStorage(image: UIImage, urlString: String) -> Bool {
         
-        clearImagesStorage()
-        
         let managedObjectContext = persistentContainer.viewContext
-        guard let images = NSEntityDescription.insertNewObject(forEntityName: DataController.imageStoringEntity, into: managedObjectContext) as? StoreImages else { return false}
+        let fetchRequest = NSFetchRequest<StoreImages>(entityName: DataController.imageStoringEntity)
+        fetchRequest.predicate = NSPredicate.init(format: "imageUrlString = %@", argumentArray: [urlString])
+        let res = try! managedObjectContext.fetch(fetchRequest)
         
-        let emptyData = Data()
-        let imageData = image.pngData()
-        images.imageBinaryData = imageData ?? emptyData
-        images.imageUrlString = urlString
-        
-        do {
-            try managedObjectContext.save()
-            return true
-        } catch {
-            print("Could not save image. \(error), \(error.localizedDescription)")
+        if res.count > 0 {
+            
+            print("Image already exists in DB")
+            return false
+        }
+        else {
+         
+            guard let images = NSEntityDescription.insertNewObject(forEntityName: DataController.imageStoringEntity, into: managedObjectContext) as? StoreImages else { return false}
+            
+            let emptyData = Data()
+            let imageData = image.pngData()
+            images.imageBinaryData = imageData ?? emptyData
+            images.imageUrlString = urlString
+            
+            do {
+                try managedObjectContext.save()
+                return true
+            } catch {
+                print("Could not save image. \(error), \(error.localizedDescription)")
+            }
         }
 
         return false
@@ -117,6 +128,19 @@ extension DataController {
     func fetchImagesFromStorage() -> [StoreImages]? {
         let managedObjectContext = persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<StoreImages>(entityName: DataController.imageStoringEntity)
+        do {
+            let values = try managedObjectContext.fetch(fetchRequest)
+            return values
+        } catch let error {
+            print(error)
+            return nil
+        }
+    }
+    
+    func fetchImageDataOf(urlString: String) -> [StoreImages]? {
+        let managedObjectContext = persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<StoreImages>(entityName: DataController.imageStoringEntity)
+        fetchRequest.predicate = NSPredicate.init(format: "imageUrlString = %@", argumentArray: [urlString])
         do {
             let values = try managedObjectContext.fetch(fetchRequest)
             return values

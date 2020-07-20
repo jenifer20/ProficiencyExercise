@@ -29,17 +29,23 @@ class FeedsViewController: UIViewController, ActivityIndicatorPresenter {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Showing Activity Indicator
-        showActivityIndicator()
-        
         // Configure Refresh Control
         refreshControl.addTarget(self, action: #selector(getFeedsApi), for: .valueChanged)
         
-        // API Service Call
-        getFeedsApi()
-        
         // Configuring TableView Programatically
         configureTableView()
+        
+        // API Service Call
+        if Reachability.isConnectedToNetwork() {
+            // Showing Activity Indicator
+            showActivityIndicator()
+            
+            getFeedsApi()
+        }else {
+            getFeedsFromStorage()
+            
+            self.showToast(message: "You're Offline", font: AppConstants.FontStyle.Font.avenir_medium.font(size: AppConstants.FontStyle.Font.Size.small)!)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,30 +71,41 @@ class FeedsViewController: UIViewController, ActivityIndicatorPresenter {
     @objc func getFeedsApi() {
 
         let request = GetInfoService()
-        request.getInfoApi { (error, title) in
+        request.getInfoApi { (success, title) in
 
             // Stoping Activity Indicator
             self.hideActivityIndicator()
             
-            self.feeds = []
-            
-            // Fetching Data from CoreData
-            if let feedData = self.dataController.fetchFromStorage()
-            {
-                let newFeeds = self.dataController.initViewModels(feedData)
-                self.feeds?.append(contentsOf: newFeeds)
-                self.feeds = self.feeds?.filter{$0?.title != ""}
-                print("Feeds Count \(String(describing: self.feeds?.count))")
+            if success {
+                // Clearing Images Storage from DB to insert latest images from api response
+//                self.dataController.clearImagesStorage()
+                DispatchQueue.main.async {
+                    self.title = title }
             }
             
-            DispatchQueue.main.async {
-                self.title = title
-                if self.refreshControl.isRefreshing {
-                    self.refreshControl.endRefreshing()
-                }
-                self.tableview.dataSource = self
-                self.tableview.reloadData()
+            self.getFeedsFromStorage()
+        }
+    }
+    
+    func getFeedsFromStorage() {
+        
+        self.feeds = []
+        
+        // Fetching Data from CoreData
+        if let feedData = self.dataController.fetchFromStorage()
+        {
+            let newFeeds = self.dataController.initViewModels(feedData)
+            self.feeds?.append(contentsOf: newFeeds)
+            self.feeds = self.feeds?.filter{$0?.title != ""}
+            print("Feeds Count \(String(describing: self.feeds?.count))")
+        }
+        
+        DispatchQueue.main.async {
+            if self.refreshControl.isRefreshing {
+                self.refreshControl.endRefreshing()
             }
+            self.tableview.dataSource = self
+            self.tableview.reloadData()
         }
     }
     
@@ -146,17 +163,23 @@ extension FeedsViewController : UITableViewDataSource {
             return cell
         }
         
-//        if storedImages?.count != 0 {
-//
-//            let imageDetails = storedImages?[indexPath.row]
-//
-//            if imageDetails?.imageUrlString == details?.imageHref {
-//
-//                cell.feedImageView.image = UIImage(data: imageDetails!.imageBinaryData)
-//            }
-//        }
+        if let imagesStorageData = dataController.fetchImageDataOf(urlString: details!.imageHref) {
+            let newImages = dataController.initViewModels(imagesStorageData)
+            self.storedImages?.append(contentsOf: newImages)
+                        
+            if storedImages!.count == 1 {
+                
+                let imageDetails = storedImages?[0]
+                cell.feedImageView.image = UIImage(data: imageDetails!.imageBinaryData)
+            }
+            else {
+                self.imageHandler.updateImageForTableViewCell(cell, inTableView: tableView, imageURL: details!.imageHref, atIndexPath: indexPath)
+            }
+        }
+        else {
+            self.imageHandler.updateImageForTableViewCell(cell, inTableView: tableView, imageURL: details!.imageHref, atIndexPath: indexPath)
+        }
         
-        self.imageHandler.updateImageForTableViewCell(cell, inTableView: tableView, imageURL: details!.imageHref, atIndexPath: indexPath)
         
 //        cell.contentView.setNeedsLayout()
 //        cell.contentView.layoutIfNeeded()
