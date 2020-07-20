@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 import SwiftyJSON
 
 typealias ResponseHandler = (ApiResponse) -> Void
@@ -21,15 +20,12 @@ class NetworkApiClient {
         let session = URLSession.shared
         
         let task = session.dataTask(with: urlRequest, completionHandler: { data, response, error in
-            // Check the response
-//            print(response)
             
             let apiResponse = self.successResponse(request: request, data: data!)
             
             if apiResponse.success {
                 responseHandler(apiResponse)
             }
-            
             
             // Check if an error occured
             if error != nil {
@@ -71,19 +67,18 @@ class NetworkApiClient {
                 
                 let dataJson = responseJson["rows"].object
                 
-                let data = try JSONSerialization.data(withJSONObject: dataJson as Any,
+                let newData = try JSONSerialization.data(withJSONObject: dataJson as Any,
                                                       options: [])
-//                let dataController = DataController()
-//
-//                if dataController.parse(data) {
-//                    print("Success")
-//                }else {
-//                    print("Failure")
-//                }
-                let decodedValue = try JSONDecoder().decode(T.self, from: data)
                 
-                return ApiResponse(success: true, title: responseJson["title"].string!, data: decodedValue as AnyObject)
+                let dataController = DataController()
+
+                if dataController.parse(newData) {
+                    print("Success Parsing")
+                }else {
+                    print("Failure Parsing")
+                }
                 
+                return ApiResponse(success: true, title: responseJson["title"].string!)
             }
             return ApiResponse(success: false)
             

@@ -8,7 +8,6 @@ target 'ProficiencyExercise' do
   # Pods for ProficiencyExercise
 
 pod 'SwiftyJSON'
-pod 'ReachabilitySwift'
 
   target 'ProficiencyExerciseTests' do
     inherit! :search_paths

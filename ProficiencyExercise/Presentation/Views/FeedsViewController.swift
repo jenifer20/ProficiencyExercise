@@ -9,21 +9,36 @@
 import UIKit
 import CoreData
 
-class FeedsViewController: UIViewController {
+class FeedsViewController: UIViewController, ActivityIndicatorPresenter {
+  
+    var activityIndicator =  UIActivityIndicatorView()
+    private let refreshControl = UIRefreshControl()
+    let dataController = DataController()
+    
+    var feeds: [FeedsModel?]? = []
+    var storedImages: [StoredImagesModel?]? = []
     
     var currentDeviceOrientation: UIDeviceOrientation = .unknown
-    fileprivate let infoCellReuseIdentifier = "infoTableViewCellIdentifier"
-    var feeds : [GetInfoResponse]?
+    
     fileprivate let imageHandler = ImageHandler()
+    
     fileprivate let tableview = UITableView()
     
+    fileprivate let infoCellReuseIdentifier = "infoTableViewCellIdentifier"
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
+        // Showing Activity Indicator
+        showActivityIndicator()
         
-        self.view.backgroundColor = .red
+        // Configure Refresh Control
+        refreshControl.addTarget(self, action: #selector(getFeedsApi), for: .valueChanged)
         
-        getInfoApi()
+        // API Service Call
+        getFeedsApi()
+        
+        // Configuring TableView Programatically
         configureTableView()
     }
     
@@ -33,7 +48,7 @@ class FeedsViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(deviceDidRotate), name: UIDevice.orientationDidChangeNotification, object: nil)
         self.currentDeviceOrientation = UIDevice.current.orientation
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
@@ -41,6 +56,118 @@ class FeedsViewController: UIViewController {
             UIDevice.current.endGeneratingDeviceOrientationNotifications()
         }
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+    
+    //MARK:- API Service Call
+    @objc func getFeedsApi() {
+
+        let request = GetInfoService()
+        request.getInfoApi { (error, title) in
+
+            // Stoping Activity Indicator
+            self.hideActivityIndicator()
+            
+            self.feeds = []
+            
+            // Fetching Data from CoreData
+            if let feedData = self.dataController.fetchFromStorage()
+            {
+                let newFeeds = self.dataController.initViewModels(feedData)
+                self.feeds?.append(contentsOf: newFeeds)
+                self.feeds = self.feeds?.filter{$0?.title != ""}
+                print("Feeds Count \(String(describing: self.feeds?.count))")
+            }
+            
+            DispatchQueue.main.async {
+                self.title = title
+                if self.refreshControl.isRefreshing {
+                    self.refreshControl.endRefreshing()
+                }
+                self.tableview.dataSource = self
+                self.tableview.reloadData()
+            }
+        }
+    }
+    
+    //MARK:- Configuring TableView
+    func configureTableView()
+    {
+        tableview.estimatedRowHeight = 100
+        tableview.rowHeight = UITableView.automaticDimension
+        tableview.tableFooterView = UIView(frame: .zero)
+        tableview.register(InfoTableViewCell.self, forCellReuseIdentifier: infoCellReuseIdentifier)
+        
+        view.addSubview(tableview)
+        tableview.translatesAutoresizingMaskIntoConstraints = false
+        tableview.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableview.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableview.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableview.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        if #available(iOS 10.0, *) {
+            tableview.refreshControl = refreshControl
+        } else {
+            tableview.addSubview(refreshControl)
+        }
+    }
+    
+    @objc func loadImagesFromStorage() {
+        
+        if let imagesStorageData = dataController.fetchImagesFromStorage() {
+            let newImages = dataController.initViewModels(imagesStorageData)
+            self.storedImages?.append(contentsOf: newImages)
+            
+//            print("Image URL \(storedImages.map{$0})")
+        }
+    }
+}
+
+extension FeedsViewController : UITableViewDataSource {
+    
+    //MARK:- TableView DataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return feeds!.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableview.dequeueReusableCell(withIdentifier: infoCellReuseIdentifier, for: indexPath) as! InfoTableViewCell
+        
+        let details = feeds![indexPath.row]
+        
+        cell.nameLabel.text = details?.title
+        cell.descriptionLabel.text = details?.summary
+        cell.feedImageView.tag = indexPath.row
+        
+        if details?.imageHref == "" {
+            return cell
+        }
+        
+//        if storedImages?.count != 0 {
+//
+//            let imageDetails = storedImages?[indexPath.row]
+//
+//            if imageDetails?.imageUrlString == details?.imageHref {
+//
+//                cell.feedImageView.image = UIImage(data: imageDetails!.imageBinaryData)
+//            }
+//        }
+        
+        self.imageHandler.updateImageForTableViewCell(cell, inTableView: tableView, imageURL: details!.imageHref, atIndexPath: indexPath)
+        
+//        cell.contentView.setNeedsLayout()
+//        cell.contentView.layoutIfNeeded()
+        
+        return cell
+    }
+}
+
+extension FeedsViewController {
+    
+    //MARK:- Device Orientation Related Methods
     
     @objc func deviceDidRotate(notification: NSNotification) {
         self.currentDeviceOrientation = UIDevice.current.orientation
@@ -52,112 +179,21 @@ class FeedsViewController: UIViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
         super.viewWillTransition(to: size, with: coordinator)
-        
+
         let animationHandler: ((UIViewControllerTransitionCoordinatorContext) -> Void) = { [weak self] (context) in
             // This block will be called several times during rotation,
             // so if you want your tableView change more smooth reload it here too.
             self?.tableview.reloadData()
         }
-        
+
         let completionHandler: ((UIViewControllerTransitionCoordinatorContext) -> Void) = { [weak self] (context) in
             // This block will be called when rotation will be completed
             self?.tableview.reloadData()
         }
-        
+
         coordinator.animate(alongsideTransition: animationHandler, completion: completionHandler)
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
-    func getInfoApi() {
-        
-        let request = GetInfoService()
-        request.getInfoApi { (error, title, response) in
-            
-            self.feeds = response as? [GetInfoResponse]
-            print(self.feeds?.count ?? 0)
-            self.feeds = self.feeds?.filter{$0.title != nil}
-            print(self.feeds?.count ?? 0)
-            
-            DispatchQueue.main.async {
-                self.title = title
-                self.tableview.dataSource = self
-                self.tableview.reloadData()
-            }
-        }
-    }
-    
-    func configureTableView() {
-        tableview.estimatedRowHeight = 100
-        tableview.rowHeight = UITableView.automaticDimension
-        tableview.register(InfoTableViewCell.self, forCellReuseIdentifier: infoCellReuseIdentifier)
-        
-        view.addSubview(tableview)
-        tableview.translatesAutoresizingMaskIntoConstraints = false
-        tableview.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        tableview.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tableview.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        tableview.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-    }
-}
 
-extension FeedsViewController : UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return feeds!.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableview.dequeueReusableCell(withIdentifier: infoCellReuseIdentifier, for: indexPath) as! InfoTableViewCell
-        let details = feeds![(indexPath as NSIndexPath).row]
-        
-        if let title = details.title {
-            cell.nameLabel.text = title
-        }
-        
-        if let description = details.summary {
-            cell.descriptionLabel.text = description
-        }
-        
-        cell.feedImageView.tag = indexPath.row
-        guard let imageUrl = details.imageHref else {
-            return cell
-        }
-        
-        self.imageHandler.updateImageForTableViewCell(cell, inTableView: tableView, imageURL: imageUrl, atIndexPath: indexPath)
-        
-        //        cell.contentView.setNeedsLayout()
-        //        cell.contentView.layoutIfNeeded()
-        
-        return cell
-    }
-}
 
-extension FeedsViewController {
-    
-    func saveFeedsIntoDB(){
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
-        let context = appDelegate.persistentContainer.viewContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Feeds", in: context)
-        
-        //        for feed in feeds! {
-        //
-        //            if let title = feed.title as? String {
-        //
-        //            }
-        //
-        //            if let description = feed.description as? String {
-        //
-        //            }
-        //
-        //            if let
-        //        }
-        
-    }
 }
 

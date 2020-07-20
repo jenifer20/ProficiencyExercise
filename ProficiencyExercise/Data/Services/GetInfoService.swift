@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias CompletionHandler =  (Bool, String, AnyObject?) -> Void
+typealias CompletionHandler =  (Bool, String) -> Void
 
 class GetInfoService {
     
@@ -16,9 +16,9 @@ class GetInfoService {
         let request = GetInfoRequest()
         NetworkApiClient().callApi(request: request) { (apiResponse) in
             if apiResponse.success {
-                completion(true, apiResponse.title ?? "", apiResponse.rows)
+                completion(true, apiResponse.title ?? "")
             } else {
-                completion(false, apiResponse.title ?? "", apiResponse.rows)
+                completion(false, apiResponse.title ?? "")
             }
         }
     }

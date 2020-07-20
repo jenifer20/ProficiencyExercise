@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GetInfoRequest: ApiRequest<[GetInfoResponse]> {
+class GetInfoRequest: ApiRequest<[Feeds]> {
     
     override func webserviceUrl() -> String {
         return AppConstants.API.apiUrl
